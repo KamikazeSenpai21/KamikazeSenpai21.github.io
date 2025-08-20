@@ -1,2 +1,207 @@
-# KamikazeSenpai21.github.io
-A simple checklist for Infinite Fusion's Pokedex.
+
+[Infinite Fusion Checklist.html](https://github.com/user-attachments/files/21907529/Infinite.Fusion.Checklist.html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Infinite Fusion Checklist</title>
+  <style>
+    body {
+      font-family: Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 2rem;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    .button {
+      padding: 0.5rem 1rem;
+      background-color: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #666;
+    }
+    .container {
+      background-color: red;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .pokemon {
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+    }
+    .pokemon input {
+      margin-right: 0.5rem;
+    }
+    .completion-status {
+      color: white;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Infinite Fusion Checklist</h1>
+    <div class="completion-status">
+      <span id="completion-count">0/501</span> | <span id="completion-percent">0%</span>
+    </div>
+    <div class="buttons">
+      <button class="button" id="selectAll">Select All</button>
+      <button class="button" id="clearAll">Clear All</button>
+    </div>
+  </header>
+  <div class="container">
+    <!-- Pokémon checkboxes will go here -->
+  </div>
+
+  <script>
+    const pokemonList = [
+      "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
+      "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
+      "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
+      "Rattata", "Raticate", "Spearow", "Fearow", "Ekans", "Arbok",
+      "Pikachu", "Raichu", "Sandshrew", "Sandslash", "NidoranF", "Nidorina", "Nidoqueen",
+      "NidoranM", "Nidorino", "Nidoking", "Clefairy", "Clefable", "Vulpix", "Ninetales",
+      "Jigglypuff", "Wigglytuff", "Zubat", "Golbat", "Oddish", "Gloom", "Vileplume",
+      "Paras", "Parasect", "Venonat", "Venomoth", "Diglett", "Dugtrio", "Meowth", "Persian",
+      "Psyduck", "Golduck", "Mankey", "Primeape", "Growlithe", "Arcanine", "Poliwag", "Poliwhirl",
+      "Poliwrath", "Abra", "Kadabra", "Alakazam", "Machop", "Machoke", "Machamp", "Bellsprout",
+      "Weepinbell", "Victreebel", "Tentacool", "Tentacruel", "Geodude", "Graveler", "Golem",
+      "Ponyta", "Rapidash", "Slowpoke", "Slowbro", "Magnemite", "Magneton", "Farfetch'd", "Doduo",
+      "Dodrio", "Seel", "Dewgong", "Grimer", "Muk", "Shellder", "Cloyster", "Gastly", "Haunter",
+      "Gengar", "Onix", "Drowzee", "Hypno", "Krabby", "Kingler", "Voltorb", "Electrode",
+      "Exeggcute", "Exeggutor", "Cubone", "Marowak", "Hitmonlee", "Hitmonchan", "Lickitung",
+      "Koffing", "Weezing", "Rhyhorn", "Rhydon", "Chansey", "Tangela", "Kangaskhan", "Horsea",
+      "Seadra", "Goldeen", "Seaking", "Staryu", "Starmie", "Mr.Mime", "Scyther", "Jynx",
+      "Electabuzz", "Magmar", "Pinsir", "Tauros", "Magikarp", "Gyarados", "Lapras", "Ditto",
+      "Eevee", "Vaporeon", "Jolteon", "Flareon", "Porygon", "Omanyte", "Omastar", "Kabuto",
+      "Kabutops", "Aerodactyl", "Snorlax", "Articuno", "Zapdos", "Moltres", "Dratini",
+      "Dragonair", "Dragonite", "Mewtwo", "Mew", "Chikorita", "Bayleef", "Meganium",
+      "Cyndaquil", "Quilava", "Typhlosion", "Totodile", "Croconaw", "Feraligatr",
+      "Sentret", "Furret", "Hoothoot", "Noctowl", "Ledyba", "Ledian", "Spinarak", "Ariados",
+      "Crobat", "Chinchou", "Lanturn", "Pichu", "Cleffa", "Igglybuff", "Togepi", "Togetic",
+      "Natu", "Xatu", "Mareep", "Flaaffy", "Ampharos", "Bellossom", "Marill", "Azumarill",
+      "Sudowoodo", "Politoed", "Hoppip", "Skiploom", "Jumpluff", "Aipom", "Sunkern",
+      "Sunflora", "Yanma", "Wooper", "Quagsire", "Espeon", "Umbreon", "Murkrow", "Slowking",
+      "Misdreavus", "Unown", "Wobbuffet", "Girafarig", "Pineco", "Forretress", "Dunsparce",
+      "Gligar", "Steelix", "Snubbull", "Granbull", "Qwilfish", "Scizor", "Shuckle", "Heracross",
+      "Sneasel", "Teddiursa", "Ursaring", "Slugma", "Magcargo", "Swinub", "Piloswine", "Corsola",
+      "Remoraid", "Octillery", "Delibird", "Mantine", "Skarmory", "Houndour", "Houndoom",
+      "Kingdra", "Phanpy", "Donphan", "Porygon2", "Stantler", "Smeargle", "Tyrogue",
+      "Hitmontop", "Smoochum", "Elekid", "Magby", "Miltank", "Blissey", "Raikou", "Entei",
+      "Suicune", "Larvitar", "Pupitar", "Tyranitar", "Lugia", "Ho-Oh", "Celebi", "Azurill",
+      "Wynaut", "Ambipom", "Mismagius", "Honchkrow", "Bonsly", "MimeJr.", "Happiny",
+      "Munchlax", "Mantyke", "Weavile", "Magnezone", "Lickilicky", "Rhyperior", "Tangrowth",
+      "Electivire", "Magmortar", "Togekiss", "Yanmega", "Leafeon", "Glaceon", "Gliscor",
+      "Mamoswine", "Porygon-Z", "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken",
+      "Blaziken", "Mudkip", "Marshtomp", "Swampert", "Ralts", "Kirlia", "Gardevoir",
+      "Gallade", "Shedinja", "Kecleon", "Beldum", "Metang", "Metagross", "Bidoof",
+      "Spiritomb", "Lucario", "Gible", "Gabite", "Garchomp", "Mawile", "Lileep", "Cradily",
+      "Anorith", "Armaldo", "Cranidos", "Rampardos", "Shieldon", "Bastiodon", "Slaking",
+      "Absol", "Duskull", "Dusclops", "Dusknoir", "Wailord", "Arceus", "Turtwig", "Grotle",
+      "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon",
+      "Nosepass", "Probopass", "Honedge", "Doublade", "Aegislash", "Pawniard", "Bisharp",
+      "Luxray", "Aggron", "Flygon", "Milotic", "Salamence", "Klinklang", "Zoroark", "Sylveon",
+      "Kyogre", "Groudon", "Rayquaza", "Dialga", "Palkia", "Giratina", "Regigigas",
+      "Darkrai", "Genesect", "Reshiram", "Zekrom", "Kyurem", "Roserade", "Drifblim",
+      "Lopunny", "Breloom", "Ninjask", "Banette", "Rotom", "Reuniclus", "Whimsicott",
+      "Krookodile", "Cofagrigus", "Galvantula", "Ferrothorn", "Litwick", "Lampent",
+      "Chandelure", "Haxorus", "Golurk", "Pyukumuku", "Klefki", "Talonflame", "Mimikyu",
+      "Volcarona", "Deino", "Zweilous", "Hydreigon", "Latias", "Latios", "Deoxys",
+      "Jirachi", "Nincada", "Bibarel", "Riolu", "Slakoth", "Vigoroth", "Wailmer",
+      "Shinx", "Luxio", "Aron", "Lairon", "Trapinch", "Vibrava", "Feebas", "Bagon",
+      "Shelgon", "Klink", "Klang", "Zorua", "Budew", "Roselia", "Drifloon", "Buneary",
+      "Shroomish", "Shuppet", "Solosis", "Duosion", "Cottonee", "Sandile", "Krokorok",
+      "Yamask", "Joltik", "Ferroseed", "Axew", "Fraxure", "Golett", "Fletchling",
+      "Fletchinder", "Larvesta", "Stunfisk", "Sableye", "Venipede", "Whirlipede",
+      "Scolipede", "Tyrunt", "Tyrantrum", "Snorunt", "Glalie", "Froslass",
+      "Oricorio Baile", "Oricorio Pom-Pom", "Oricorio Pa'u", "Oricorio Sensu",
+      "Trubbish", "Garbodor", "Carvanha", "Sharpedo", "Phantump", "Trevenant",
+      "Noibat", "Noivern", "Swablu", "Altaria", "Goomy", "Sliggoo", "Goodra",
+      "Regirock", "Regice", "Registeel", "Necrozma", "Stufful", "Bewear",
+      "Dhelmise", "Mareanie", "Toxapex", "Hawlucha", "Cacnea", "Cacturne",
+      "Sandygast", "Palossand", "Amaura", "Aurorus", "Rockruff", "Lycanroc Midday",
+      "Lycanroc Midnight", "Meloetta Aria", "Meloetta Pirouette", "Cresselia",
+      "Bruxish", "Ultra Necrozma", "Jangmo-o", "Hakamo-o", "Kommo-o", "Wimpod",
+      "Golisopod", "Fomantis", "Lurantis", "Carbink", "Chespin", "Quilladin",
+      "Chesnaught", "Fennekin", "Braixen", "Delphox", "Froakie", "Frogadier",
+      "Greninja", "Torkoal", "Pumpkaboo", "Gourgeist", "Swirlix", "Slurpuff",
+      "Scraggy", "Scrafty", "Lotad", "Lombre", "Ludicolo", "Minior Meteor", "Minior Core", "Diancie", "Luvdisc"
+    ];
+    const container = document.querySelector('.container');
+    const savedSelections = JSON.parse(localStorage.getItem('pokemonSelections')) || {};
+
+    const updateCompletionStatus = () => {
+      const checkedCount = Object.values(savedSelections).filter(checked => checked).length;
+      const completionCount = `${checkedCount}/501`;
+      const completionPercent = `${(checkedCount / 501 * 100).toFixed(2)}%`; // Two decimal places
+      document.getElementById('completion-count').textContent = completionCount;
+      document.getElementById('completion-percent').textContent = completionPercent;
+    };
+
+    pokemonList.forEach(name => {
+      const div = document.createElement('div');
+      div.className = 'pokemon';
+      const checked = savedSelections[name] || false;
+      div.innerHTML = `<input type="checkbox" id="${name}" ${checked ? 'checked' : ''} /><label for="${name}">${name}</label>`;
+      container.appendChild(div);
+
+      // Add event listener to store the state of each checkbox in localStorage
+      const checkbox = div.querySelector('input');
+      checkbox.addEventListener('change', () => {
+        savedSelections[name] = checkbox.checked;
+        localStorage.setItem('pokemonSelections', JSON.stringify(savedSelections));
+        updateCompletionStatus();
+      });
+    });
+
+    // Select All button functionality
+    document.getElementById('selectAll').addEventListener('click', () => {
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = true;
+        savedSelections[checkbox.id] = true;
+      });
+      localStorage.setItem('pokemonSelections', JSON.stringify(savedSelections));
+      updateCompletionStatus();
+    });
+
+    // Clear All button functionality
+    document.getElementById('clearAll').addEventListener('click', () => {
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+        savedSelections[checkbox.id] = false;
+      });
+      localStorage.setItem('pokemonSelections', JSON.stringify(savedSelections));
+      updateCompletionStatus();
+    });
+
+    // Initialize completion status
+    updateCompletionStatus();
+  </script>
+</body>
+</html>
