@@ -1,83 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Counter Tool</title>
+<title>Counter Dashboard</title>
 
 <style>
+
+:root{
+--tabColor:#2b2b2b;
+}
+
 body{
-    font-family: Arial;
-    margin:0;
-    background:#1e1e1e;
-    color:white;
+margin:0;
+font-family:Arial;
+background:var(--tabColor);
+color:white;
+transition:.4s;
+}
+
+body.light{
+background:#f0f0f0;
+color:black;
 }
 
 header{
-    padding:15px;
-    background:#111;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+background:#111;
+padding:10px;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+align-items:center;
 }
 
 button{
-    cursor:pointer;
+background:#333;
+border:none;
+color:white;
+padding:6px 8px;
+border-radius:6px;
+cursor:pointer;
+transition:.2s;
+}
+
+button:hover{
+box-shadow:0 0 10px #4CAF50;
+transform:scale(1.05);
 }
 
 #tabs{
-    display:flex;
-    gap:5px;
+display:flex;
+flex-wrap:wrap;
+gap:6px;
 }
 
 .tab{
-    padding:8px 14px;
-    background:#333;
-    border-radius:6px;
+padding:6px;
+border-radius:6px;
+display:flex;
+align-items:center;
+gap:4px;
+cursor:grab;
 }
 
 .tab.active{
-    background:#4CAF50;
+outline:2px solid #4CAF50;
+}
+
+#search{
+padding:5px;
+background:#222;
+border:none;
+color:white;
 }
 
 #counterArea{
-    padding:20px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:15px;
+padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
 }
 
 .counter{
-    background:#2b2b2b;
-    padding:15px;
-    border-radius:10px;
-    width:200px;
+position:relative;
+padding:12px;
+border-radius:10px;
+display:flex;
+flex-direction:column;
+gap:6px;
+cursor:grab;
+}
+
+.counter.selected{
+outline:2px solid #4CAF50;
 }
 
 .counter input{
-    width:100%;
-    margin-bottom:10px;
+background:#111;
+border:none;
+color:white;
+padding:4px;
 }
 
-.count{
-    font-size:32px;
-    text-align:center;
+.counter input.value{
+font-size:28px;
+text-align:center;
 }
 
 .controls{
-    display:flex;
-    justify-content:space-between;
-    margin-top:10px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:4px;
 }
 
-.controls button{
-    flex:1;
-    margin:2px;
+.big{
+font-size:18px;
+font-weight:bold;
 }
 
-#themeMenu{
-    display:flex;
-    gap:10px;
+.delete{
+position:absolute;
+top:5px;
+right:6px;
+cursor:pointer;
+color:#ff6666;
 }
+
+.pin{
+position:absolute;
+top:5px;
+left:6px;
+cursor:pointer;
+}
+
+.addCard{
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:40px;
+background:#333;
+border-radius:10px;
+cursor:pointer;
+}
+
+#notes{
+width:100%;
+height:70px;
+background:#111;
+color:white;
+border:none;
+padding:6px;
+}
+
+#settingsPanel{
+position:fixed;
+right:15px;
+top:15px;
+background:#222;
+padding:18px;
+border-radius:12px;
+display:none;
+flex-direction:column;
+gap:10px;
+width:260px;
+max-height:80vh;
+overflow:auto;
+}
+
+.flash{
+animation:pop .2s;
+}
+
+@keyframes pop{
+50%{transform:scale(1.1)}
+}
+
 </style>
 </head>
 
@@ -87,61 +183,120 @@ button{
 
 <div id="tabs"></div>
 
-<div id="themeMenu">
-<select id="fontSelect">
-<option value="Arial">Arial</option>
-<option value="Verdana">Verdana</option>
-<option value="Courier New">Courier</option>
-<option value="Georgia">Georgia</option>
-</select>
+<input id="search" placeholder="Search counters">
 
-<select id="themeSelect">
-<option value="dark">Dark</option>
-<option value="light">Light</option>
-<option value="blue">Blue</option>
-<option value="green">Green</option>
-</select>
+<button onclick="toggleTheme()">🌙</button>
 
-<button onclick="addTab()">+ Tab</button>
-<button onclick="addCounter()">+ Counter</button>
-</div>
+<button onclick="toggleSettings()">⚙</button>
 
 </header>
 
+<textarea id="notes" placeholder="Notes for this tab"></textarea>
+
 <div id="counterArea"></div>
+
+<div id="settingsPanel">
+
+<h3>Settings & Help</h3>
+
+<b>Font</b>
+<select onchange="setFont(this.value)">
+<option>Arial</option>
+<option>Verdana</option>
+<option>Courier New</option>
+<option>Georgia</option>
+</select>
+
+<hr>
+
+<button onclick="exportData()">Export</button>
+<input type="file" onchange="importData(event)">
+
+<button onclick="shareCounters()">Share Link</button>
+
+<hr>
+
+<button onclick="resetCounters()">Reset Counters</button>
+<button onclick="resetAll()">Reset Everything</button>
+
+<hr>
+
+<b>Keyboard</b>
+
+<div style="font-size:13px">
+
++ → +1  
+Shift + + → +5  
+- → -1  
+Shift + - → -5  
+Delete → delete  
+Ctrl+Z → undo
+
+</div>
+
+</div>
 
 <script>
 
-let data = JSON.parse(localStorage.getItem("counterData")) || {
-tabs:[
-{name:"Main", counters:[]}
-],
+let historyStack=[];
+
+let data=JSON.parse(localStorage.getItem("counterData"))||{
+tabs:[{name:"Main",color:"#2b2b2b",notes:"",counters:[]}],
 currentTab:0
 };
+
+let selectedCounters=[];
+let dragCounter=null;
+let dragTab=null;
 
 function save(){
 localStorage.setItem("counterData",JSON.stringify(data));
 }
 
+function pushHistory(){
+historyStack.push(JSON.stringify(data));
+if(historyStack.length>50) historyStack.shift();
+}
+
 function renderTabs(){
 
-let tabDiv = document.getElementById("tabs");
-tabDiv.innerHTML="";
+let div=document.getElementById("tabs");
+div.innerHTML="";
 
-data.tabs.forEach((tab,i)=>{
+data.tabs.forEach((t,i)=>{
 
-let t=document.createElement("div");
-t.className="tab"+(i==data.currentTab?" active":"");
-t.innerText=tab.name;
+let tab=document.createElement("div");
+tab.className="tab"+(i==data.currentTab?" active":"");
+tab.style.background=t.color;
+tab.draggable=true;
 
-t.onclick=()=>{
-data.currentTab=i;
+tab.innerHTML=`
+<input value="${t.name}" onchange="renameTab(${i},this.value)">
+<input type="color" value="${t.color}" onchange="tabColor(${i},this.value)">
+<button onclick="switchTab(${i})">Open</button>
+<button onclick="cloneTab(${i})">Clone</button>
+<button onclick="deleteTab(${i})">X</button>
+`;
+
+tab.ondragstart=()=>dragTab=i;
+
+tab.ondrop=()=>{
+let temp=data.tabs[dragTab];
+data.tabs.splice(dragTab,1);
+data.tabs.splice(i,0,temp);
 render();
 };
 
-tabDiv.appendChild(t);
+tab.ondragover=e=>e.preventDefault();
+
+div.appendChild(tab);
 
 });
+
+let add=document.createElement("button");
+add.innerText="+Tab";
+add.onclick=addTab;
+div.appendChild(add);
 
 }
 
@@ -152,54 +307,157 @@ area.innerHTML="";
 
 let tab=data.tabs[data.currentTab];
 
-tab.counters.forEach((counter,index)=>{
+let search=document.getElementById("search").value.toLowerCase();
 
-let div=document.createElement("div");
-div.className="counter";
+tab.counters.sort((a,b)=>b.pinned-a.pinned);
 
-div.innerHTML=`
+tab.counters.forEach((c,i)=>{
 
-<input value="${counter.name}" onchange="renameCounter(${index},this.value)">
+if(!c.name.toLowerCase().includes(search)) return;
 
-<div class="count">${counter.value}</div>
+let card=document.createElement("div");
+card.className="counter";
+card.style.background=c.color;
+card.draggable=true;
+
+if(selectedCounters.includes(i)) card.classList.add("selected");
+
+card.innerHTML=`
+
+<div class="pin" onclick="togglePin(${i})">${c.pinned?"📌":"📍"}</div>
+
+<div class="delete" onclick="deleteCounter(${i})">✖</div>
+
+<input value="${c.name}" onchange="renameCounter(${i},this.value)">
+
+<input class="value" type="number" value="${c.value}" onchange="setValue(${i},this.value)">
+
+<select onchange="setGroup(${i},this.value)">
+<option ${c.group=="Default"?"selected":""}>Default</option>
+<option ${c.group=="Stats"?"selected":""}>Stats</option>
+<option ${c.group=="Resources"?"selected":""}>Resources</option>
+<option ${c.group=="Other"?"selected":""}>Other</option>
+</select>
 
 <div class="controls">
-<button onclick="change(${index},1)">+</button>
-<button onclick="change(${index},-1)">-</button>
+
+<button class="big" onclick="change(${i},1)">+1</button>
+<button onclick="change(${i},5)">+5</button>
+<button onclick="change(${i},10)">+10</button>
+
+<button class="big" onclick="change(${i},-1)">-1</button>
+<button onclick="change(${i},-5)">-5</button>
+<button onclick="change(${i},-10)">-10</button>
+
 </div>
 
-<div class="controls">
-<button onclick="resetCounter(${index})">Reset</button>
-<button onclick="deleteCounter(${index})">Delete</button>
-</div>
+<input type="color" value="${c.color}" onchange="counterColor(${i},this.value)">
+
+<button onclick="cloneCounter(${i})">Clone</button>
+<button onclick="showHistory(${i})">📊</button>
 
 `;
 
-area.appendChild(div);
+card.onclick=(e)=>{
+if(e.ctrlKey){
+selectedCounters.push(i);
+}else{
+selectedCounters=[i];
+}
+render();
+};
+
+card.ondragstart=()=>dragCounter=i;
+
+card.ondrop=()=>{
+let temp=tab.counters[dragCounter];
+tab.counters.splice(dragCounter,1);
+tab.counters.splice(i,0,temp);
+render();
+};
+
+card.ondragover=e=>e.preventDefault();
+
+area.appendChild(card);
 
 });
+
+let add=document.createElement("div");
+add.className="addCard";
+add.innerHTML="+";
+add.onclick=addCounter;
+area.appendChild(add);
 
 }
 
 function render(){
+
+let tab=data.tabs[data.currentTab];
+
+document.documentElement.style.setProperty('--tabColor',tab.color);
+
+document.getElementById("notes").value=tab.notes;
+
 renderTabs();
 renderCounters();
+
 save();
+
+}
+
+function switchTab(i){
+data.currentTab=i;
+selectedCounters=[];
+render();
+}
+
+function addTab(){
+data.tabs.push({name:"New Tab",color:"#333",notes:"",counters:[]});
+render();
+}
+
+function cloneTab(i){
+let copy=JSON.parse(JSON.stringify(data.tabs[i]));
+copy.name+=" Copy";
+data.tabs.push(copy);
+render();
+}
+
+function deleteTab(i){
+if(data.tabs.length==1)return;
+data.tabs.splice(i,1);
+data.currentTab=0;
+render();
+}
+
+function renameTab(i,name){
+data.tabs[i].name=name;
+save();
+}
+
+function tabColor(i,color){
+data.tabs[i].color=color;
+render();
 }
 
 function addCounter(){
 
 data.tabs[data.currentTab].counters.push({
 name:"Counter",
-value:0
+value:0,
+color:"#2b2b2b",
+pinned:false,
+group:"Default",
+history:[]
 });
 
 render();
 
 }
 
-function deleteCounter(i){
-data.tabs[data.currentTab].counters.splice(i,1);
+function cloneCounter(i){
+let c=JSON.parse(JSON.stringify(data.tabs[data.currentTab].counters[i]));
+data.tabs[data.currentTab].counters.push(c);
 render();
 }
 
@@ -208,63 +466,187 @@ data.tabs[data.currentTab].counters[i].name=name;
 save();
 }
 
-function change(i,amount){
+function setValue(i,val){
 
-data.tabs[data.currentTab].counters[i].value+=amount;
+pushHistory();
+
+let c=data.tabs[data.currentTab].counters[i];
+
+c.value=parseInt(val)||0;
+
+c.history.push(c.value);
+
+if(c.history.length>50)c.history.shift();
+
 render();
 
 }
 
-function resetCounter(i){
-data.tabs[data.currentTab].counters[i].value=0;
+function change(i,amt){
+
+pushHistory();
+
+let c=data.tabs[data.currentTab].counters[i];
+
+c.value+=amt;
+
+c.history.push(c.value);
+
+if(c.history.length>50)c.history.shift();
+
+render();
+
+}
+
+function togglePin(i){
+data.tabs[data.currentTab].counters[i].pinned=!data.tabs[data.currentTab].counters[i].pinned;
 render();
 }
 
-function addTab(){
+function setGroup(i,g){
+data.tabs[data.currentTab].counters[i].group=g;
+save();
+}
 
-let name=prompt("Tab name?");
-if(!name)return;
+function counterColor(i,color){
+data.tabs[data.currentTab].counters[i].color=color;
+render();
+}
 
-data.tabs.push({
-name:name,
-counters:[]
+function deleteCounter(i){
+data.tabs[data.currentTab].counters.splice(i,1);
+render();
+}
+
+document.getElementById("search").oninput=render;
+
+document.getElementById("notes").oninput=e=>{
+data.tabs[data.currentTab].notes=e.target.value;
+save();
+};
+
+function toggleSettings(){
+let s=document.getElementById("settingsPanel");
+s.style.display=s.style.display=="flex"?"none":"flex";
+}
+
+function toggleTheme(){
+document.body.classList.toggle("light");
+}
+
+function setFont(f){
+document.body.style.fontFamily=f;
+}
+
+function exportData(){
+let blob=new Blob([JSON.stringify(data)],{type:"application/json"});
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="counter-data.json";
+a.click();
+}
+
+function importData(e){
+
+let reader=new FileReader();
+
+reader.onload=()=>{
+data=JSON.parse(reader.result);
+render();
+};
+
+reader.readAsText(e.target.files[0]);
+
+}
+
+function shareCounters(){
+
+let encoded=btoa(JSON.stringify(data));
+
+let url=location.origin+location.pathname+"#"+encoded;
+
+navigator.clipboard.writeText(url);
+
+alert("Share link copied!");
+
+}
+
+if(location.hash){
+
+try{
+data=JSON.parse(atob(location.hash.substring(1)));
+}catch{}
+
+}
+
+function resetCounters(){
+data.tabs.forEach(t=>t.counters.forEach(c=>c.value=0));
+render();
+}
+
+function resetAll(){
+localStorage.removeItem("counterData");
+location.reload();
+}
+
+function showHistory(i){
+
+let c=data.tabs[data.currentTab].counters[i];
+
+let win=window.open("","history","width=400,height=300");
+
+win.document.body.innerHTML="<canvas id='chart' width='350' height='200'></canvas>";
+
+let ctx=win.document.getElementById("chart").getContext("2d");
+
+ctx.beginPath();
+
+c.history.forEach((v,index)=>{
+
+let x=index*6;
+let y=200-(v*2);
+
+if(index==0)ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+
+});
+
+ctx.strokeStyle="lime";
+ctx.stroke();
+
+}
+
+document.addEventListener("keydown",e=>{
+
+if(selectedCounters.length==0)return;
+
+let tab=data.tabs[data.currentTab];
+
+selectedCounters.forEach(i=>{
+
+let c=tab.counters[i];
+
+if(e.key=="+") c.value+=e.shiftKey?5:1;
+
+if(e.key=="-") c.value-=e.shiftKey?5:1;
+
+if(e.key=="Delete") tab.counters.splice(i,1);
+
+});
+
+if(e.ctrlKey && e.key=="z"){
+if(historyStack.length){
+data=JSON.parse(historyStack.pop());
+render();
+}
+}
+
+render();
+
 });
 
 render();
 
-}
-
-document.getElementById("fontSelect").onchange=(e)=>{
-document.body.style.fontFamily=e.target.value;
-};
-
-document.getElementById("themeSelect").onchange=(e)=>{
-
-let t=e.target.value;
-
-if(t=="light"){
-document.body.style.background="#f0f0f0";
-document.body.style.color="#000";
-}
-
-if(t=="dark"){
-document.body.style.background="#1e1e1e";
-document.body.style.color="#fff";
-}
-
-if(t=="blue"){
-document.body.style.background="#0e1a2b";
-}
-
-if(t=="green"){
-document.body.style.background="#0f2b1a";
-}
-
-};
-
-render();
-
 </script>
-
 </body>
 </html>
