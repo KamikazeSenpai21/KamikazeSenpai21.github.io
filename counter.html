@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <title>Counter Dashboard</title>
 
@@ -36,11 +37,13 @@ button{
 background:#333;
 border:none;
 color:white;
-padding:6px 8px;
-border-radius:6px;
+padding:8px 10px;
+border-radius:8px;
 cursor:pointer;
 transition:.2s;
+font-size:clamp(12px,1.5vw,16px);
 }
+
 
 button:hover{
 box-shadow:0 0 10px #4CAF50;
@@ -76,9 +79,10 @@ color:white;
 #counterArea{
 padding:20px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:15px;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:16px;
 }
+
 
 .counter{
 position:relative;
@@ -104,6 +108,7 @@ padding:4px;
 .counter input.value{
 font-size:28px;
 text-align:center;
+font-size:clamp(22px,3vw,32px);
 }
 
 .controls{
@@ -172,6 +177,35 @@ animation:pop .2s;
 
 @keyframes pop{
 50%{transform:scale(1.1)}
+}
+
+@media (max-width:600px){
+
+header{
+flex-direction:column;
+align-items:stretch;
+}
+
+#tabs{
+overflow-x:auto;
+}
+
+.counter{
+padding:14px;
+}
+
+.controls button{
+padding:10px;
+}
+
+.addCard{
+font-size:36px;
+}
+
+#notes{
+height:90px;
+}
+
 }
 
 </style>
