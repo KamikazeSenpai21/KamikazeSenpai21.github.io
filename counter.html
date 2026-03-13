@@ -404,8 +404,6 @@ card.draggable=true;
 
 if(selectedCounters.has(c.id)) card.classList.add("selected");
 
-card.innerHTML=`
-
 card.innerHTML = `
 
 <div class="counterHeader">
@@ -424,10 +422,9 @@ oninput="renameCounter(${i},this.value)">
 
 </div>
 
-
-<input value="${c.name}" oninput="renameCounter(${i},this.value)">
-
-<input class="value" type="number" value="${c.value}" oninput="setValue(${i},this.value)">
+<input class="value" type="number"
+value="${c.value}"
+oninput="setValue(${i},this.value)">
 
 <div class="controls">
 
@@ -445,12 +442,14 @@ oninput="renameCounter(${i},this.value)">
 
 </div>
 
-
-<input type="color" value="${c.color}" onchange="counterColor(${i},this.value)">
+<input type="color"
+value="${c.color}"
+onchange="counterColor(${i},this.value)">
 
 <button onclick="cloneCounter(${i})">Clone</button>
 
 `;
+
 
 card.onclick=(e)=>{
 
@@ -511,7 +510,7 @@ save();
 
 function switchTab(i){
 data.currentTab=i;
-selectedCounters=[];
+selectedCounters=new Set();
 render();
 }
 
@@ -577,17 +576,6 @@ let c=data.tabs[data.currentTab].counters[i];
 c.value=parseInt(val)||0;
 
 save();
-
-}
-
-
-pushHistory();
-
-let c=data.tabs[data.currentTab].counters[i];
-
-c.value=parseInt(val)||0;
-
-render();
 
 }
 
@@ -693,7 +681,7 @@ location.reload();
 
 document.addEventListener("keydown",e=>{
 
-if(selectedCounters.length==0)return;
+if(selectedCounters.size==0)return;
 
 let tab=data.tabs[data.currentTab];
 
