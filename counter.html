@@ -62,8 +62,7 @@ border-radius:6px;
 display:flex;
 align-items:center;
 gap:4px;
-cursor:grab;
-transition:transform .15s ease, box-shadow .15s ease;
+cursor:pointer;
 }
 
 .tab:hover{
@@ -434,6 +433,15 @@ tab.className="tab"+(i==data.currentTab?" active":"");
 tab.style.background=t.color;
 tab.draggable=true;
 
+tab.onclick=(e)=>{
+
+if(e.target.tagName==="INPUT" || e.target.tagName==="BUTTON"){
+return;
+}
+
+switchTab(i);
+
+};
 tab.innerHTML=`
 
 <input class="titleInput tabTitle"
@@ -445,11 +453,11 @@ oninput="renameTab(${i},this.value)">
 value="${t.color}"
 onchange="tabColor(${i},this.value)">
 
-<button onclick="switchTab(${i})">Open</button>
 <button onclick="cloneTab(${i})">Clone</button>
 <button onclick="deleteTab(${i})">✖</button>
 
 `;
+
 tab.ondragstart=()=>dragTab=i;
 
 tab.ondrop=()=>{
