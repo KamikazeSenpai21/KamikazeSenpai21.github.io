@@ -70,6 +70,17 @@ transition:transform .15s ease, box-shadow .15s ease;
 transform:translateY(-1px);
 }
 
+.smallButton{
+aspect-ratio:1 / 1;
+font-size:14px;
+padding:6px;
+}
+
+.bigButton{
+grid-column:1 / span 3;
+font-size:20px;
+padding:12px;
+}
 
 .tab.active{
 outline:2px solid #4CAF50;
@@ -115,6 +126,13 @@ color:white;
 padding:4px;
 }
 
+.counterDivider{
+grid-column:1 / span 3;
+height:1px;
+background:rgba(255,255,255,0.15);
+margin:4px 0;
+}
+
 .counter input.value{
 font-size:32px;
 text-align:center;
@@ -126,8 +144,10 @@ font-size:clamp(22px,3vw,32px);
 .controls{
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:4px;
+gap:8px;
+margin-top:6px;
 }
+
 
 .big{
 font-size:18px;
@@ -434,6 +454,8 @@ oninput="setValue(${i},this.value)">
 
 <button class="bigButton" onclick="change(${i},1)">+1</button>
 
+<div class="counterDivider"></div>
+
 <button class="bigButton" onclick="change(${i},-1)">-1</button>
 
 <button class="smallButton" onclick="change(${i},-5)">-5</button>
@@ -441,6 +463,8 @@ oninput="setValue(${i},this.value)">
 <button class="smallButton" onclick="change(${i},-100)">-100</button>
 
 </div>
+
+
 
 <input type="color"
 value="${c.color}"
