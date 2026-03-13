@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pokemon Type Chart</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  text-align:center;
+}
+
+table{
+  border-collapse: collapse;
+  margin:auto;
+}
+
+th, td{
+  border:1px solid black;
+  padding:6px;
+  width:45px;
+  height:35px;
+  font-weight:bold;
+}
+
+/* effectiveness */
+.se { background:#8BE28B; }     /* 2 */
+.nve { background:#F28B82; }    /* 0.5 */
+.neu { background:#F2F2F2; }    /* 1 */
+.imm { background:#CCCCCC; }    /* 0 */
+
+/* type colors */
+.nor{background:#A8A77A}
+.fig{background:#C22E28;color:white}
+.fly{background:#A98FF3}
+.gra{background:#7AC74C}
+.wat{background:#6390F0;color:white}
+.fir{background:#EE8130}
+.roc{background:#B6A136}
+.gro{background:#E2BF65}
+.psy{background:#F95587;color:white}
+.bug{background:#A6B91A}
+.dra{background:#6F35FC;color:white}
+.ele{background:#F7D02C}
+.gho{background:#735797;color:white}
+.poi{background:#A33EA1;color:white}
+.ice{background:#96D9D6}
+.ste{background:#B7B7CE}
+.dar{background:#705746;color:white}
+</style>
+</head>
+
+<body>
+
+<h2>Pokemon Type Chart</h2>
+<p>2 = Super Effective | 1 = Neutral | 0.5 = Resist | 0 = Immune</p>
+
+<table>
+
+<tr>
+<th>ATK\DEF</th>
+<th class="nor">NOR</th><th class="fig">FIG</th><th class="fly">FLY</th><th class="gra">GRA</th>
+<th class="wat">WAT</th><th class="fir">FIR</th><th class="roc">ROC</th><th class="gro">GRO</th>
+<th class="psy">PSY</th><th class="bug">BUG</th><th class="dra">DRA</th><th class="ele">ELE</th>
+<th class="gho">GHO</th><th class="poi">POI</th><th class="ice">ICE</th><th class="ste">STE</th>
+<th class="dar">DAR</th>
+</tr>
+
+<tr>
+<th class="nor">NOR</th>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="se">2</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="fig">FIG</th>
+<td class="nve">0.5</td><td class="neu">1</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td>
+<td class="se">2</td><td class="se">2</td><td class="neu">1</td><td class="neu">1</td>
+<td class="se">2</td><td class="se">2</td><td class="nve">0.5</td><td class="nve">0.5</td>
+<td class="nve">0.5</td>
+</tr>
+
+<tr>
+<th class="fly">FLY</th>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="gra">GRA</th>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="se">2</td>
+<td class="nve">0.5</td><td class="se">2</td><td class="nve">0.5</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="se">2</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="se">2</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="wat">WAT</th>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="se">2</td><td class="nve">0.5</td><td class="nve">0.5</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="fir">FIR</th>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td>
+<td class="se">2</td><td class="se">2</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="se">2</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="nve">0.5</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="roc">ROC</th>
+<td class="neu">1</td><td class="se">2</td><td class="nve">0.5</td><td class="neu">1</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="gro">GRO</th>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="se">2</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="nve">0.5</td><td class="neu">1</td>
+<td class="neu">1</td><td class="se">2</td><td class="neu">1</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="nve">0.5</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="psy">PSY</th>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="se">2</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td><td class="se">2</td>
+<td class="se">2</td>
+</tr>
+
+<tr>
+<th class="bug">BUG</th>
+<td class="neu">1</td><td class="se">2</td><td class="se">2</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="se">2</td><td class="neu">1</td><td class="neu">1</td>
+<td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="se">2</td><td class="se">2</td><td class="neu">1</td><td class="se">2</td>
+<td class="nve">0.5</td>
+</tr>
+
+<tr>
+<th class="dra">DRA</th>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="ele">ELE</th>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="se">2</td>
+<td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="se">2</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="gho">GHO</th>
+<td class="se">2</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="se">2</td>
+</tr>
+
+<tr>
+<th class="poi">POI</th>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="se">2</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="se">2</td><td class="se">2</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="ice">ICE</th>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="nve">0.5</td>
+<td class="se">2</td><td class="se">2</td><td class="neu">1</td><td class="nve">0.5</td>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="se">2</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="ste">STE</th>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="se">2</td><td class="se">2</td><td class="nve">0.5</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="neu">1</td><td class="neu">1</td><td class="nve">0.5</td><td class="se">2</td>
+<td class="neu">1</td>
+</tr>
+
+<tr>
+<th class="dar">DAR</th>
+<td class="neu">1</td><td class="se">2</td><td class="neu">1</td><td class="neu">1</td>
+<td class="neu">1</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td><td class="neu">1</td>
+<td class="nve">0.5</td><td class="neu">1</td><td class="neu">1</td><td class="se">2</td>
+<td class="se">2</td>
+</tr>
+
+</table>
+
+</body>
+</html>
