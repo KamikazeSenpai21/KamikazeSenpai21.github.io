@@ -317,7 +317,7 @@ height:90px;
 
 <b>Max per line</b>
 
-<select onchange="setPerLine(this.value)">
+<select id="perLineSelect" onchange="setPerLine(this.value)">
 <option value="auto">Auto</option>
 <option value="2">2</option>
 <option value="3">3</option>
@@ -374,6 +374,11 @@ document.documentElement.style.setProperty("--perLine","auto-fit");
 }else{
 document.documentElement.style.setProperty("--perLine",savedPerLine);
 }
+
+setTimeout(()=>{
+let sel=document.getElementById("perLineSelect");
+if(sel) sel.value=savedPerLine;
+},0);
 
 }
 
@@ -517,8 +522,12 @@ onchange="counterColor(${i},this.value)">
 
 `;
 
-
 card.onclick=(e)=>{
+
+// Ignore clicks inside inputs, selects, or buttons
+if(e.target.tagName==="INPUT" || e.target.tagName==="BUTTON" || e.target.tagName==="SELECT"){
+return;
+}
 
 if(e.ctrlKey){
 selectedCounters.add(c.id);
@@ -637,13 +646,9 @@ save();
 }
 
 function setValue(i,val){
-
 let c=data.tabs[data.currentTab].counters[i];
-
 c.value=parseInt(val)||0;
-
 save();
-
 }
 
 
