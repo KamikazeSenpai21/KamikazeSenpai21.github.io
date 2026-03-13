@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Counter Tool</title>
+
+<style>
+body{
+    font-family: Arial;
+    margin:0;
+    background:#1e1e1e;
+    color:white;
+}
+
+header{
+    padding:15px;
+    background:#111;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+button{
+    cursor:pointer;
+}
+
+#tabs{
+    display:flex;
+    gap:5px;
+}
+
+.tab{
+    padding:8px 14px;
+    background:#333;
+    border-radius:6px;
+}
+
+.tab.active{
+    background:#4CAF50;
+}
+
+#counterArea{
+    padding:20px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.counter{
+    background:#2b2b2b;
+    padding:15px;
+    border-radius:10px;
+    width:200px;
+}
+
+.counter input{
+    width:100%;
+    margin-bottom:10px;
+}
+
+.count{
+    font-size:32px;
+    text-align:center;
+}
+
+.controls{
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+}
+
+.controls button{
+    flex:1;
+    margin:2px;
+}
+
+#themeMenu{
+    display:flex;
+    gap:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div id="tabs"></div>
+
+<div id="themeMenu">
+<select id="fontSelect">
+<option value="Arial">Arial</option>
+<option value="Verdana">Verdana</option>
+<option value="Courier New">Courier</option>
+<option value="Georgia">Georgia</option>
+</select>
+
+<select id="themeSelect">
+<option value="dark">Dark</option>
+<option value="light">Light</option>
+<option value="blue">Blue</option>
+<option value="green">Green</option>
+</select>
+
+<button onclick="addTab()">+ Tab</button>
+<button onclick="addCounter()">+ Counter</button>
+</div>
+
+</header>
+
+<div id="counterArea"></div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("counterData")) || {
+tabs:[
+{name:"Main", counters:[]}
+],
+currentTab:0
+};
+
+function save(){
+localStorage.setItem("counterData",JSON.stringify(data));
+}
+
+function renderTabs(){
+
+let tabDiv = document.getElementById("tabs");
+tabDiv.innerHTML="";
+
+data.tabs.forEach((tab,i)=>{
+
+let t=document.createElement("div");
+t.className="tab"+(i==data.currentTab?" active":"");
+t.innerText=tab.name;
+
+t.onclick=()=>{
+data.currentTab=i;
+render();
+};
+
+tabDiv.appendChild(t);
+
+});
+
+}
+
+function renderCounters(){
+
+let area=document.getElementById("counterArea");
+area.innerHTML="";
+
+let tab=data.tabs[data.currentTab];
+
+tab.counters.forEach((counter,index)=>{
+
+let div=document.createElement("div");
+div.className="counter";
+
+div.innerHTML=`
+
+<input value="${counter.name}" onchange="renameCounter(${index},this.value)">
+
+<div class="count">${counter.value}</div>
+
+<div class="controls">
+<button onclick="change(${index},1)">+</button>
+<button onclick="change(${index},-1)">-</button>
+</div>
+
+<div class="controls">
+<button onclick="resetCounter(${index})">Reset</button>
+<button onclick="deleteCounter(${index})">Delete</button>
+</div>
+
+`;
+
+area.appendChild(div);
+
+});
+
+}
+
+function render(){
+renderTabs();
+renderCounters();
+save();
+}
+
+function addCounter(){
+
+data.tabs[data.currentTab].counters.push({
+name:"Counter",
+value:0
+});
+
+render();
+
+}
+
+function deleteCounter(i){
+data.tabs[data.currentTab].counters.splice(i,1);
+render();
+}
+
+function renameCounter(i,name){
+data.tabs[data.currentTab].counters[i].name=name;
+save();
+}
+
+function change(i,amount){
+
+data.tabs[data.currentTab].counters[i].value+=amount;
+render();
+
+}
+
+function resetCounter(i){
+data.tabs[data.currentTab].counters[i].value=0;
+render();
+}
+
+function addTab(){
+
+let name=prompt("Tab name?");
+if(!name)return;
+
+data.tabs.push({
+name:name,
+counters:[]
+});
+
+render();
+
+}
+
+document.getElementById("fontSelect").onchange=(e)=>{
+document.body.style.fontFamily=e.target.value;
+};
+
+document.getElementById("themeSelect").onchange=(e)=>{
+
+let t=e.target.value;
+
+if(t=="light"){
+document.body.style.background="#f0f0f0";
+document.body.style.color="#000";
+}
+
+if(t=="dark"){
+document.body.style.background="#1e1e1e";
+document.body.style.color="#fff";
+}
+
+if(t=="blue"){
+document.body.style.background="#0e1a2b";
+}
+
+if(t=="green"){
+document.body.style.background="#0f2b1a";
+}
+
+};
+
+render();
+
+</script>
+
+</body>
+</html>
