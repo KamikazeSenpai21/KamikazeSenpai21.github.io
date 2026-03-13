@@ -1,80 +1,94 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>KamikazeSenpai21's site</title>
+<title>Random Tools</title>
 
 <style>
-  body {
+
+body {
+    background: #1b0033; /* dark purple */
     font-family: Arial, sans-serif;
-    background: #1e1e1e;
-    color: white;
     text-align: center;
-    padding-top: 80px;
-  }
+    margin: 0;
+    padding: 0;
+}
 
-  h1 {
-    margin-bottom: 40px;
-  }
+.container {
+    margin-top: 120px;
+}
 
-  .menu {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 250px;
-    margin: auto;
-  }
-
-  .menu a {
-    text-decoration: none;
-  }
-
-  .button {
-    background: #9A7CAB;
-    border: none;
-    padding: 5px;
-    font-size: 18px;
-    border-radius: 8px;
+h1 {
     color: white;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+    font-size: 64px;
+    margin-bottom: 60px;
+}
 
-  .button:hover {
-    background: #45a049;
-    transform: scale(1.05);
-  }
+/* BUTTON STYLE */
+
+button {
+    display: block;
+    margin: 15px auto;
+    padding: 12px 26px;
+    font-size: 18px;
+    background-color: #ffd84d;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 220px;
+
+    /* glow */
+    box-shadow: 0 0 10px #ffd84d;
+
+    transition: 
+        transform 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s;
+}
+
+button:hover {
+    background-color: #ffea80;
+
+    /* stronger glow */
+    box-shadow: 
+        0 0 10px #ffd84d,
+        0 0 20px #ffd84d,
+        0 0 40px #ffd84d;
+
+    transform: translateY(-3px) scale(1.05);
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="container">
+
 <h1>Random Tools</h1>
 
-<div class="menu">
+<button onclick="location.href='checklist.html'">
+Fusion Checklist
+</button>
 
-<a href="checklist.html">
-<button class="button">Fusion Checklist</button>
-</a>
+<button onclick="location.href='inversechart.html'">
+Inverse Type Chart
+</button>
 
-<a href="inversechart.html">
-<button class="button">Inverse Type Chart</button>
-</a>
+<button onclick="location.href='counter.html'">
+Counter Tool V2
+</button>
 
-<a href="counte2r.html">
-<button class="button">Counter Tool V2</button>
-</a>
+<button onclick="location.href='about.html'">
+About
+</button>
 
-<a href="about.html">
-<button class="button">About</button>
-</a>
+<button onclick="location.href='counterv1.html'">
+Counter Tool V1
+</button>
 
 </div>
-
-<a href="counter.html">
-<button class="button">Counter Tool V1</button>
-</a>
 
 </body>
 </html>
