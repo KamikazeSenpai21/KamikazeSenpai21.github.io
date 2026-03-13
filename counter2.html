@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Counter Tool</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#1e1e1e;
+color:white;
+}
+
+header{
+background:#111;
+padding:10px;
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+button{
+background:#333;
+border:none;
+color:white;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+transition:0.2s;
+}
+
+button:hover{
+box-shadow:0 0 10px #4CAF50;
+transform:scale(1.05);
+}
+
+#tabs{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+}
+
+.tab{
+padding:6px;
+border-radius:6px;
+background:#333;
+display:flex;
+align-items:center;
+gap:4px;
+}
+
+.tab.active{
+outline:2px solid #4CAF50;
+}
+
+.tab input{
+background:transparent;
+border:none;
+color:white;
+width:90px;
+}
+
+#counterArea{
+padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fill,200px);
+gap:15px;
+}
+
+.counter{
+padding:15px;
+border-radius:10px;
+background:#2b2b2b;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.counter input.name{
+width:100%;
+background:transparent;
+border:none;
+color:white;
+}
+
+.counter input.value{
+width:100%;
+text-align:center;
+font-size:28px;
+background:#111;
+border:none;
+color:white;
+}
+
+.controls{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:4px;
+}
+
+.addCard{
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:40px;
+background:#333;
+border-radius:10px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.addCard:hover{
+box-shadow:0 0 12px #4CAF50;
+}
+
+.colorPick{
+width:100%;
+height:25px;
+border:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div id="tabs"></div>
+
+</header>
+
+<div id="counterArea"></div>
+
+<script>
+
+let data=JSON.parse(localStorage.getItem("counterData"))||{
+tabs:[
+{name:"Main",color:"#2b2b2b",counters:[]}
+],
+currentTab:0
+};
+
+function save(){
+localStorage.setItem("counterData",JSON.stringify(data));
+}
+
+function renderTabs(){
+
+let tabDiv=document.getElementById("tabs");
+tabDiv.innerHTML="";
+
+data.tabs.forEach((tab,i)=>{
+
+let div=document.createElement("div");
+div.className="tab"+(i==data.currentTab?" active":"");
+div.style.background=tab.color;
+
+div.innerHTML=`
+
+<input value="${tab.name}" onchange="renameTab(${i},this.value)">
+<input type="color" value="${tab.color}" onchange="tabColor(${i},this.value)">
+<button onclick="switchTab(${i})">Open</button>
+
+`;
+
+tabDiv.appendChild(div);
+
+});
+
+let add=document.createElement("div");
+add.className="tab";
+add.innerHTML=`<button onclick="addTab()">+ Tab</button>`;
+tabDiv.appendChild(add);
+
+}
+
+function renderCounters(){
+
+let area=document.getElementById("counterArea");
+area.innerHTML="";
+
+let tab=data.tabs[data.currentTab];
+
+tab.counters.forEach((c,i)=>{
+
+let div=document.createElement("div");
+div.className="counter";
+div.style.background=c.color;
+
+div.innerHTML=`
+
+<input class="name" value="${c.name}" onchange="renameCounter(${i},this.value)">
+
+<input class="value" type="number" value="${c.value}" onchange="setValue(${i},this.value)">
+
+<div class="controls">
+<button onclick="change(${i},1)">+1</button>
+<button onclick="change(${i},5)">+5</button>
+<button onclick="change(${i},10)">+10</button>
+
+<button onclick="change(${i},-1)">-1</button>
+<button onclick="change(${i},-5)">-5</button>
+<button onclick="change(${i},-10)">-10</button>
+</div>
+
+<input class="colorPick" type="color" value="${c.color}" onchange="counterColor(${i},this.value)">
+
+<button onclick="resetCounter(${i})">Reset</button>
+<button onclick="deleteCounter(${i})">Delete</button>
+
+`;
+
+area.appendChild(div);
+
+});
+
+let add=document.createElement("div");
+add.className="addCard";
+add.innerHTML="+";
+add.onclick=addCounter;
+area.appendChild(add);
+
+}
+
+function render(){
+renderTabs();
+renderCounters();
+save();
+}
+
+function switchTab(i){
+data.currentTab=i;
+render();
+}
+
+function renameTab(i,name){
+data.tabs[i].name=name;
+save();
+}
+
+function tabColor(i,color){
+data.tabs[i].color=color;
+render();
+}
+
+function addTab(){
+data.tabs.push({
+name:"New Tab",
+color:"#2b2b2b",
+counters:[]
+});
+render();
+}
+
+function addCounter(){
+data.tabs[data.currentTab].counters.push({
+name:"Counter",
+value:0,
+color:"#2b2b2b"
+});
+render();
+}
+
+function renameCounter(i,name){
+data.tabs[data.currentTab].counters[i].name=name;
+save();
+}
+
+function change(i,amt){
+data.tabs[data.currentTab].counters[i].value+=amt;
+render();
+}
+
+function setValue(i,val){
+data.tabs[data.currentTab].counters[i].value=parseInt(val)||0;
+save();
+}
+
+function counterColor(i,color){
+data.tabs[data.currentTab].counters[i].color=color;
+render();
+}
+
+function resetCounter(i){
+data.tabs[data.currentTab].counters[i].value=0;
+render();
+}
+
+function deleteCounter(i){
+data.tabs[data.currentTab].counters.splice(i,1);
+render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
