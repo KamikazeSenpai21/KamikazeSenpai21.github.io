@@ -98,9 +98,10 @@ color:white;
 #counterArea{
 padding:16px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+grid-template-columns:repeat(var(--perLine, auto-fit), minmax(120px,1fr));
 gap:12px;
 }
+
 
 
 
@@ -304,12 +305,25 @@ height:90px;
 
 <h3>Settings & Help</h3>
 
-<b>Font</b>
+<b>Font (Broken)</b>
 <select onchange="setFont(this.value)">
 <option>Arial</option>
 <option>Verdana</option>
 <option>Courier New</option>
 <option>Georgia</option>
+</select>
+
+<hr>
+
+<b>Max per line</b>
+
+<select onchange="setPerLine(this.value)">
+<option value="auto">Auto</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
 </select>
 
 <hr>
@@ -351,6 +365,18 @@ tabs:[{name:"Main",color:"#2b2b2b",notes:"",counters:[]}],
 currentTab:0
 };
 
+let savedPerLine = localStorage.getItem("perLine");
+
+if(savedPerLine){
+
+if(savedPerLine==="auto"){
+document.documentElement.style.setProperty("--perLine","auto-fit");
+}else{
+document.documentElement.style.setProperty("--perLine",savedPerLine);
+}
+
+}
+
 let selectedCounters=new Set();
 let dragCounterId=null;
 let dragTab=null;
@@ -362,6 +388,19 @@ localStorage.setItem("counterData",JSON.stringify(data));
 function pushHistory(){
 historyStack.push(JSON.stringify(data));
 if(historyStack.length>50) historyStack.shift();
+}
+
+function setPerLine(val){
+
+if(val==="auto"){
+document.documentElement.style.setProperty("--perLine","auto-fit");
+localStorage.setItem("perLine","auto");
+return;
+}
+
+document.documentElement.style.setProperty("--perLine",val);
+localStorage.setItem("perLine",val);
+
 }
 
 function renderTabs(){
