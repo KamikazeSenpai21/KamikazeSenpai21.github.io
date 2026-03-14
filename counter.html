@@ -601,6 +601,12 @@ area.appendChild(add);
 
 function render(){
 
+// If the user is typing in an input, don't interrupt it
+let active = document.activeElement;
+if(active && (active.tagName==="INPUT" || active.tagName==="TEXTAREA")){
+return;
+}
+
 let tab=data.tabs[data.currentTab];
 
 document.documentElement.style.setProperty('--tabColor',tab.color);
@@ -613,7 +619,6 @@ renderCounters();
 save();
 
 }
-
 function switchTab(i){
 data.currentTab=i;
 selectedCounters=new Set();
